@@ -9,9 +9,10 @@ public class Ship : MonoBehaviour
     [SerializeField] [Range (1.0f, 100.0f)] private float fAccelerationAmount;
     [SerializeField] [Range (0.0f, 0.01f)] private float fDragAmount;
 
+    [SerializeField] private LaserBeam laserPrefab;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private Camera mainCamera;
-    private bool bAccelerate = false;
+    private bool bAccelerating = false;
     Vector3 velocityVector = Vector3.zero;
     
     
@@ -29,7 +30,7 @@ public class Ship : MonoBehaviour
         
         transform.position += velocityVector * Time.deltaTime;
 
-        if (bAccelerate)
+        if (bAccelerating)
         {
             velocityVector += transform.forward * fAccelerationAmount * Time.deltaTime;
         }
@@ -39,19 +40,18 @@ public class Ship : MonoBehaviour
         }
 
         LookAtMousePointer();
-
     }
 
     public void MoveAction(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            bAccelerate = true;
+            bAccelerating = true;
         }
 
         if (context.canceled)
         {
-            bAccelerate = false;
+            bAccelerating = false;
         }
     }
 
@@ -64,7 +64,10 @@ public class Ship : MonoBehaviour
 
     public void FireAction(InputAction.CallbackContext context)
     {
-
+        if (context.performed)
+        {
+            Instantiate(laserPrefab, transform.position, transform.rotation);
+        }
     }
 
     void LookAtMousePointer()
@@ -73,4 +76,6 @@ public class Ship : MonoBehaviour
 
         transform.LookAt(mousePosition);
     }
+
+
 }
