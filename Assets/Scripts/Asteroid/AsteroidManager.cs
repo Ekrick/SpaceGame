@@ -4,29 +4,25 @@ using UnityEngine;
 
 public class AsteroidManager : MonoBehaviour
 {
-    
+    [SerializeField] private ShipStats playerShip;
     [SerializeField] private Asteroid asteroidPrefab;
+    [SerializeField] [Range (10, 100)] private int iSpawnRadius = 10;
     [SerializeField] private int count = 0;
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
-        SpawnAtRandomLocation();
+        SpawnAtRandomLocationOnCircle();
     }
 
-    void SpawnAtRandomLocation()
+    void SpawnAtRandomLocationOnCircle()
     {
-        float x = Random.Range(-100, 100);
-        float z = Random.Range(-100, 100);
+        float posAngle = Random.Range(0f, 6.28f);
 
-        Vector3 spawnPos = new Vector3(x, 0, z);
+        Vector3 spawnPos = new Vector3(Mathf.Sin(posAngle) * iSpawnRadius, 0, Mathf.Cos(posAngle) * iSpawnRadius);
 
         Asteroid spawned = Instantiate(asteroidPrefab, spawnPos, Quaternion.identity);
-
-        spawned.transform.LookAt(Vector3.zero);
+        spawned.SetShip(playerShip);
+        spawned.transform.LookAt(playerShip.transform.position);
         count++;
     }
 }
