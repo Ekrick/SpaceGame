@@ -7,11 +7,26 @@ public class AsteroidManager : MonoBehaviour
     [SerializeField] private ShipStats playerShip;
     [SerializeField] private Asteroid asteroidPrefab;
     [SerializeField] [Range (10, 100)] private int iSpawnRadius = 10;
-    [SerializeField] private int count = 0;
+
+    [SerializeField] private int iSpawnInterval = 2;
+    private float fSpawnTimer = 0;
+    private int iSpawnCount = 0;
 
     void Update()
     {
-        SpawnAtRandomLocationOnCircle();
+        fSpawnTimer += Time.deltaTime;
+        if (fSpawnTimer >= iSpawnInterval)
+        {
+            iSpawnCount++;
+            
+            for (int i = 0; i < iSpawnCount; i++)
+            {
+                SpawnAtRandomLocationOnCircle();
+            }
+
+            fSpawnTimer = 0;
+        }
+
     }
 
     void SpawnAtRandomLocationOnCircle()
@@ -23,6 +38,5 @@ public class AsteroidManager : MonoBehaviour
         Asteroid spawned = Instantiate(asteroidPrefab, spawnPos, Quaternion.identity);
         spawned.SetShip(playerShip);
         spawned.transform.LookAt(playerShip.transform.position);
-        count++;
     }
 }

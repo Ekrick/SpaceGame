@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Ship : MonoBehaviour
+public class ShipControls : MonoBehaviour
 {
     [SerializeField] [Range (1.0f, 100.0f)] private float fMaxSpeed;
     [SerializeField] [Range (1.0f, 100.0f)] private float fAccelerationAmount;
@@ -23,22 +23,7 @@ public class Ship : MonoBehaviour
 
     void Update()
     {
-        if (velocityVector.magnitude > fMaxSpeed)
-        {
-            velocityVector = velocityVector.normalized * fMaxSpeed;
-        }
-        
-        transform.position += velocityVector * Time.deltaTime;
-
-        if (bAccelerating)
-        {
-            velocityVector += transform.forward * fAccelerationAmount * Time.deltaTime;
-        }
-        else
-        {
-            velocityVector -= velocityVector * fDragAmount;
-        }
-
+        MoveShip();
         LookAtMousePointer();
     }
 
@@ -77,5 +62,23 @@ public class Ship : MonoBehaviour
         transform.LookAt(mousePosition);
     }
 
+    void MoveShip()
+    {
+        if (velocityVector.magnitude > fMaxSpeed)
+        {
+            velocityVector = velocityVector.normalized * fMaxSpeed;
+        }
+        
+        transform.position += velocityVector * Time.deltaTime;
+        
+        if (bAccelerating)
+        {
+            velocityVector += transform.forward * fAccelerationAmount * Time.deltaTime;
+        }
+        else
+        {
+            velocityVector -= velocityVector * fDragAmount;
+        }
+    }
 
 }
