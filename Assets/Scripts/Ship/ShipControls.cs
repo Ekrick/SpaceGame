@@ -10,6 +10,7 @@ public class ShipControls : MonoBehaviour
     [SerializeField] [Range (0.0f, 0.01f)] private float fDragAmount;
 
     [SerializeField] private LaserBeam laserPrefab;
+    [SerializeField] private LaserPool laserPool;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private Camera mainCamera;
     private bool bAccelerating = false;
@@ -51,7 +52,8 @@ public class ShipControls : MonoBehaviour
     {
         if (context.performed)
         {
-            Instantiate(laserPrefab, transform.position, transform.rotation);
+            //Instantiate(laserPrefab, transform.position, transform.rotation);
+            laserPool.FireLaser(transform.position, transform.rotation);
         }
     }
 
