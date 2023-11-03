@@ -22,7 +22,7 @@ public class PlayerHUD : MonoBehaviour
 
     public void UpdateScore()
     {
-       String scoreString = "Score: " + Mathf.RoundToInt(fScore);
+       String scoreString = "" + Mathf.RoundToInt(fScore);
        scoreText.text = scoreString;
     }
 }

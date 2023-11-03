@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using Unity.Jobs;
 using UnityEngine;
 using Unity.Collections;
 
+[BurstCompile]
 public struct AsteroidJob : IJob
 {
     private Vector3 asteroidPosition;
-    private Quaternion asteroidRotation;
+    private Vector3 targetDestination;
     private float fSpeed;
     private float fDeltaTime;
     private float fDistance;
@@ -16,10 +18,10 @@ public struct AsteroidJob : IJob
     private NativeArray<Vector3> positionArray;
     private NativeArray<float> distanceArray;
     
-    public AsteroidJob(Vector3 position, Quaternion rotation, float speed, float deltaTime, Vector3 targetPosition, float distance, NativeArray<Vector3> positions, NativeArray<float> distances)
+    public AsteroidJob(Vector3 position, Vector3 destination, float speed, float deltaTime, Vector3 targetPosition, float distance, NativeArray<Vector3> positions, NativeArray<float> distances)
     {
         asteroidPosition = position;
-        asteroidRotation = rotation;
+        targetDestination = destination;
         fSpeed = speed;
         fDeltaTime = deltaTime;
         shipPosition = targetPosition;
@@ -36,7 +38,7 @@ public struct AsteroidJob : IJob
 
     private void MoveAsteroid()
     {
-        Vector3 positionChange = asteroidRotation * Vector3.forward * fSpeed * fDeltaTime;
+        Vector3 positionChange = (targetDestination - asteroidPosition).normalized * fSpeed * fDeltaTime;
         asteroidPosition += positionChange;
 
         positionArray[0] = asteroidPosition;

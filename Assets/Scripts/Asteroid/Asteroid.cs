@@ -10,18 +10,24 @@ public class Asteroid : MonoBehaviour
     [SerializeField] [Range (0.1f, 2f)] private float fImpactRadius = 1;
     [SerializeField] [Range (0.1f, 2f)] private float fSpeed = 2;
     [SerializeField] private float fDistance;
+
+    private Vector3 destination;
     
     private NativeArray<Vector3> positionArray;
     private NativeArray<float> distanceArray;
 
     private JobHandle jobHandle;
     
-    private ShipStats ship;
+    [SerializeField] private ShipStats ship;
     private AsteroidManager asteroidManager;
 
     private void OnEnable()
     {
         fDistance = 1000;
+        if (ship != null)
+        {
+            destination = ship.transform.position;
+        }
         positionArray = new NativeArray<Vector3>(1, Allocator.Persistent);
         positionArray[0] = transform.position;
         distanceArray = new NativeArray<float>(1, Allocator.Persistent);
@@ -30,13 +36,12 @@ public class Asteroid : MonoBehaviour
 
     void Update()
     {
-        // transform.position += transform.forward * Time.deltaTime;
-        //
-        // CheckShipRange();
+        if (ship != null)
+        {
+            AsteroidJob job = new AsteroidJob(transform.position, destination, fSpeed, Time.deltaTime, ship.transform.position, fDistance, positionArray, distanceArray);
 
-        AsteroidJob job = new AsteroidJob(transform.position, transform.rotation, fSpeed, Time.deltaTime, ship.transform.position, fDistance, positionArray, distanceArray);
-
-        jobHandle = job.Schedule();
+            jobHandle = job.Schedule();
+        }
     }
 
     private void LateUpdate()
@@ -69,16 +74,15 @@ public class Asteroid : MonoBehaviour
     {
         ship = playerShip;
         asteroidManager = manager;
+        destination = playerShip.transform.position;
+        DespawnAsteroid();
     }
 
-    public void LogDistance()
-    {
-        Debug.Log(fDistance);
-    }
 
     public void SpawnAsteroid()
     {
         this.gameObject.SetActive(true);
+        transform.LookAt(ship.transform.position);
     }
 
     public void DespawnAsteroid()

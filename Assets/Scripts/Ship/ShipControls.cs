@@ -8,19 +8,13 @@ public class ShipControls : MonoBehaviour
     [SerializeField] [Range (1.0f, 100.0f)] private float fMaxSpeed;
     [SerializeField] [Range (1.0f, 100.0f)] private float fAccelerationAmount;
     [SerializeField] [Range (0.0f, 0.01f)] private float fDragAmount;
+    private bool bAccelerating = false;
 
-    [SerializeField] private LaserBeam laserPrefab;
     [SerializeField] private LaserPool laserPool;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private Camera mainCamera;
-    private bool bAccelerating = false;
     Vector3 velocityVector = Vector3.zero;
     
-    
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
@@ -52,7 +46,6 @@ public class ShipControls : MonoBehaviour
     {
         if (context.performed)
         {
-            //Instantiate(laserPrefab, transform.position, transform.rotation);
             laserPool.FireLaser(transform.position, transform.rotation);
         }
     }
@@ -82,5 +75,4 @@ public class ShipControls : MonoBehaviour
             velocityVector -= velocityVector * fDragAmount;
         }
     }
-
 }

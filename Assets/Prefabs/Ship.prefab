@@ -278,8 +278,8 @@ MonoBehaviour:
   fMaxSpeed: 50
   fAccelerationAmount: 30
   fDragAmount: 0.005
-  laserPrefab: {fileID: 3456613767751090746, guid: 6c26d89ba79d34f48ad0b648b5734f2d,
-    type: 3}
+  fFireInterval: 0.2
+  laserPool: {fileID: 0}
   playerInput: {fileID: 7663253325733699863}
   mainCamera: {fileID: 0}
 --- !u!114 &1325977845777444994

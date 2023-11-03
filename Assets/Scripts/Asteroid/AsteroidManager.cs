@@ -14,19 +14,18 @@ public class AsteroidManager : MonoBehaviour
     
     [SerializeField] private int iSpawnInterval = 2;
     private float fSpawnTimer = 0;
-    private int iSpawnCount = 0;
+    private int iSpawnCount = 3;
 
     private List<Asteroid> asteroidPool;
 
     private void Awake()
     {
-        for (int i = 0; i < iPoolSize; i++)
-        {
-            Asteroid spawned = Instantiate(asteroidPrefab, transform.position, Quaternion.identity);
-            spawned.Setup(playerShip, this);
-            spawned.DespawnAsteroid();
-            asteroidPool.Add(spawned);
-        }
+        asteroidPool = new List<Asteroid>();
+    }
+
+    private void Start()
+    {
+        FillPool();
     }
 
     void Update()
@@ -52,23 +51,36 @@ public class AsteroidManager : MonoBehaviour
 
         Vector3 spawnPos = new Vector3(Mathf.Sin(posAngle) * iSpawnRadius, 0, Mathf.Cos(posAngle) * iSpawnRadius);
 
+        Quaternion lookDirection = Quaternion.LookRotation(playerShip.transform.position - spawnPos);
         if (asteroidPool.Count <= 0)
         {
-            spawned = Instantiate(asteroidPrefab, spawnPos, Quaternion.identity);
+            spawned = Instantiate(asteroidPrefab, spawnPos, lookDirection);
             spawned.Setup(playerShip, this);
         }
         else
         {
             spawned = asteroidPool[0];
+            asteroidPool.RemoveAt(0);
             spawned.transform.position = spawnPos;
+            spawned.transform.rotation = lookDirection;
             spawned.SpawnAsteroid();
-            asteroidPool.Remove(spawned);
         }
-        spawned.transform.LookAt(playerShip.transform.position);
     }
 
     public void RePool(Asteroid asteroid)
     {
         asteroidPool.Add(asteroid);
+    }
+
+    private void FillPool()
+    {
+
+        for (int i = 0; i < iPoolSize; i++)
+        {
+            Asteroid spawned = Instantiate(asteroidPrefab, transform.position, Quaternion.identity);
+            asteroidPool.Add(spawned);
+            spawned.Setup(playerShip, this);
+        }
+
     }
 }
